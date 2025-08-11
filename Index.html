@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Resume</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #78ffd6, #007991);
+    }
+
+    .blended-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      mix-blend-mode: color-burn;
+      z-index: 1;
+    }
+
+    /* Left Thin Navbar */
+    .sidebar {
+      height: 50%;
+      width: 5%;
+      background: rgba(0, 121, 145, 0.46);
+      backdrop-filter: blur(10px);
+      display: flex;
+      gap: 4rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 1em;
+      z-index: 2;
+    }
+
+    .sidebar a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      padding: 0.6rem;
+      border-radius: 0.3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      width: 40px;
+      height: 40px;
+      justify-content: center;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .sidebar a i {
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sidebar a span {
+      font-size: 0.7rem;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: all 0.3s ease;
+      position: absolute;
+      bottom: -18px;
+      white-space: nowrap;
+      text-align: center;
+      width: max-content;
+      left: 50%;
+      transform: translateX(-50%) translateY(5px);
+      z-index: 1;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+
+    .sidebar a:hover i {
+      transform: translateY(-2px);
+    }
+
+    .sidebar a:hover span {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Middle Profile Section */
+    .profile-card {
+      width: 40%;
+      background: white;
+      border-radius: 1em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4em;
+      padding-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 7px 0 20px rgba(0, 0, 0, 0.3);
+      z-index: 3;
+    }
+
+    .profile-card img {
+      width: 40%;
+      margin-top: 5em;
+      border-radius: 50%;
+      border-bottom: 4px solid #78ffd6;
+    }
+
+    .profile-card h2 {
+      font-size: 2.5rem;
+      color: #333;
+    }
+
+    .profile-card p {
+      color: #777;
+      font-size: 1.5rem;
+    }
+
+
+    .social-icons a {
+      margin: 0 0.5em;
+      color: #007991;
+      font-size: 2.2rem;
+    }
+
+    .download-btn {
+      background: #007991;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 15px;
+      transition: background 0.3s;
+    }
+
+    .download-btn:hover {
+      background: #005f5c;
+    }
+
+    /* Right Sliding Content */
+    .content {
+      width: 55%;
+      height: 80%;
+      position: relative;
+      overflow: scroll;
+      display: flex;
+      border-radius: 1em 0 0 1em;
+      z-index: 2;
+    }
+
+    .section {
+      position: absolute;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 4rem;
+      backdrop-filter: blur(11px);
+      transition: right 0.6s ease;
+      overflow-y: auto;
+    }
+
+    .section.active {
+      right: 0;
+    }
+
+    /* Experience Cards */
+    #experience .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      /* Explicit 2 columns */
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    #experience .card.span-2 {
+      grid-column: span 2;
+    }
+
+    #experience .card {
+      background: #ffffff;
+      border-radius: 0.7rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #experience .card::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(closest-side, #78ffd6, transparent);
+      opacity: 0.35;
+      transform: rotate(25deg);
+    }
+
+    #experience .card h2 {
+      margin-top: 0.5rem;
+    }
+
+    #experience .card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: #0f2d2b;
+    }
+
+    #experience small.current, #education small.current {
+      border: 1px solid #44af8f;
+      color: #44af8f;
+    }
+
+    #experience small, #education small {
+      font-weight: normal;
+      color: #687978;
+      border: 1px solid #687978;
+      padding: 0.4rem;
+      font-size: 0.85rem;
+      border-radius: 0.2rem;
+    }
+
+    #experience job-type {
+      color: white;
+      background: #44af8f;
+      border-radius: 0.2rem;
+      padding: 0.5rem;
+    }
+
+    #experience .Freelance {
+      background: #1c7b7a;
+    }
+
+    #experience .card ul {
+      padding-left: 1.1rem;
+      margin: 0.5rem 0 0;
+      color: #334;
+    }
+
+    #experience .card li {
+      margin: 0.5rem 0;
+    }
+
+    #experience hr {
+      border: none;
+      border-top: 1px dashed rgba(0, 0, 0, 0.15);
+      margin: 0.75rem 0 0.5rem;
+    }
+
+    /* Slide card styles (replacing flip) */
+    #experience .flip-card {
+      cursor: pointer;
+    }
+
+    #experience .card.flip-card {
+      min-height: 220px;
+      overflow: hidden;
+    }
+
+    #experience .flip-inner {
+      position: relative;
+      min-height: 220px;
+    }
+
+    #experience .front,
+    #experience .back {
+      position: absolute;
+      inset: 0;
+      overflow: auto;
+      transition: transform 0.45s ease;
+      will-change: transform;
+    }
+
+    /* Initial positions: front visible, back off-canvas to the right */
+    #experience .front {
+      transform: translateX(0%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem;
+    }
+
+    #experience .back {
+      transform: translateX(110%);
+      border-left: 0.5rem solid #007991;
+      padding-left: 1rem;
+    }
+
+    /* Hover preview: slide 5% to hint interactivity (only when not flipped) */
+    #experience .flip-card:not(.flipped):hover .front {
+      transform: translateX(-5%);
+    }
+
+    #experience .flip-card:not(.flipped):hover .back {
+      transform: translateX(95%);
+    }
+
+    /* Active (flipped) state: show back fully, hide front to left */
+    #experience .flip-card.flipped .front {
+      transform: translateX(-100%);
+    }
+
+    #experience .flip-card.flipped .back {
+      transform: translateX(0%);
+    }
+
+    #experience .front .logo {
+      width: 10em;
+      height: 10em;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0px 12px rgba(0, 0, 0, 0.22);
+    }
+
+    #experience .front .logo img {
+      width: 80%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    #experience .front .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    #experience .front .meta-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    #about .card {
+      background: #ffffff;
+      border-radius: 0.7rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    #about .card p {
+      line-height: 1.4rem;
+      font-size: 1.2rem;
+    }
+
+    #about .card.grid{
+      width: 40%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin: 2rem auto;
+    }
+
+    #about .card .brands-grid{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+
+    #about .card .brands-grid .brand-item{
+      width: 13rem;
+      height: 13rem;
+      border-radius: 0.5rem;
+      background: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0px 12px rgba(0, 0, 0, 0.22);
+    }
+    #about .card .brands-grid .brand-item:hover{
+      transform: scale(1.05);
+      box-shadow: 0 0px 12px rgba(37, 86, 46, 0.22);
+      transition: all 0.3s ease;
+    }
+    #about .card .brands-grid .brand-item img{
+      width: 90%;
+      height: auto;
+      object-fit: cover;
+    }
+    .category {
+      font-weight: bold;
+      border: 1px solid #44af8f;
+      color: #44af8f;
+      padding: 0.4rem;
+      border-radius: 0.5rem;
+    }
+
+    /* Skills Section */
+    #skills .card, #education .card, #contact .card {
+      background: #ffffff;
+      border-radius: 0.7rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    #skills .card h2 {
+      margin-bottom: 1rem;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .skill-item {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      align-items: center;
+    }
+
+    .skill-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .skill-percent {
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    .progress-bar {
+      width: auto;
+      height: 24px;
+      mask:
+        radial-gradient(circle closest-side, #000 94%, #0000) 0 0/20% 100%,
+        linear-gradient(#000 0 0) center/calc(100%) calc(100% - 12px) no-repeat;
+      background: #ddd;
+
+    }
+
+    .progress {
+      background:
+        linear-gradient(90deg, #25b09b, #007991);
+      height: 100%;
+    }
+
+    /* .progress-bar {
+      height: 6px;
+      background: #e9ecef;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, #78ffd6, #007991);
+      border-radius: 3px;
+      transition: width 1s ease-in-out;
+    } */
+
+    .other-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .skill-tag {
+      color: #687978;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.2rem;
+      font-size: 0.9em;
+      border: 1px solid #687978;
+    }
+
+    .language-item {
+      margin-bottom: 1.2rem;
+    }
+
+    .language-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .skill-level {
+      font-size: 0.85em;
+      color: #666;
+      margin-left: 0.5rem;
+    }
+
+    .hobbies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .hobby-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 0.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .hobby-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .hobby-item i {
+      font-size: 1.5rem;
+      color: #007991;
+      margin-bottom: 0.5rem;
+    }
+
+    .hobby-item span {
+      font-size: 0.9em;
+      color: #555;
+      text-align: center;
+    }
+    #education .degree{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem 1rem;
+      margin-top: 2rem;
+    }
+    #contact .contact-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    #contact .contact-item{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 1rem 0.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #contact .contact-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    #contact .contact-item i {
+      font-size: 1.5rem;
+      color: #007991;
+      margin: 0 1rem
+    }
+    #contact .contact-item span {
+      font-size: 0.9em;
+      color: #555;
+      text-align: center;
+    }
+    #contact a{
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <img src="https://cdn.svgator.com/images/2022/06/animated-svg-background-css.svg" class="blended-svg">
+  <div class="sidebar">
+    <a href="#" data-section="about"><i class="fas fa-user"></i><span>About</span></a>
+    <a href="#" data-section="experience"><i class="fas fa-briefcase"></i><span>Experience</span></a>
+    <a href="#" data-section="skills"><i class="fas fa-cogs"></i><span>Skills</span></a>
+    <a href="#" data-section="education"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
+    <a href="#" data-section="contact"><i class="fas fa-envelope"></i><span>Contact</span></a>
+  </div>
+
+  <div class="profile-card">
+    <div><img src="assets/PFP.jpg" alt="Profile Picture" /></div>
+    <div>
+      <h2>NISHANT GUPTA</h2>
+      <p>UI/UX Designer</p>
+    </div>
+    <div class="social-icons">
+      <a href="mailto:nishantgupta107@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+      <a href="https://www.linkedin.com/in/nishantgupta107" target="_blank" rel="noopener" title="LinkedIn"><i
+          class="fab fa-linkedin"></i></a>
+      <a href="https://www.behance.net/nishantgupta107/projects" target="_blank" rel="noopener" title="Behance"><i
+          class="fab fa-behance"></i></a>
+    </div>
+    <a href="https://www.linkedin.com/in/nishantgupta107" target="_blank" rel="noopener" class="download-btn"><i
+        class="fas fa-download"></i>&nbsp;&nbsp;Download CV</a>
+  </div>
+
+  <div class="content">
+    <div id="about" class="section active">
+      <div class="card">
+        <h2 style="margin-bottom: 1rem;">About Me</h2>
+        <p>
+          <strong>Hello! I am Nishant Gupta,</strong> a highly adaptable and results-oriented design professional with
+          over seven years of experience translating
+          user
+          needs into engaging visual solutions,
+          including microsite development and data visualization. Proven ability to lead projects, manage client
+          expectations, and deliver impactful designs that
+          drive engagement and achieve business goals. Leverage a strong foundation in user-centered design, project
+          management, and emerging technologies like AI
+          to excel in UI/UX designs.
+        </p>
+      </div>
+      <!-- <div class="card grid">
+        <p><span class="category">Age</span></p>
+        <p style="text-align: right;">30</p>
+        <p><span class="category">Location</span></p>
+        <p style="text-align: right;">Delhi, India</p>
+        <p><span class="category">Marital Status</span></p>
+        <p style="text-align: right;">Single</p>
+      </div> -->
+      <div class="card">
+        <h2 style="margin-bottom: 1.5rem;">Featured Brands</h2>
+        <div class="brands-grid">
+          <div class="brand-item"><img src="assets/Deloitte.svg" alt="Deloitte"></div>
+          <div class="brand-item"><img src="assets/Citibank Logo.png" alt="Citibank"></div>
+          <div class="brand-item"><img src="assets/Westin Logo.svg" alt="Westin"></div>
+          <div class="brand-item"><img src="assets/Leela.svg" alt="Leela"></div>
+          <div class="brand-item"><img src="assets/Publicis.png" alt="Publicis"></div>
+          <div class="brand-item"><img src="assets/Taj Hotel Logo.png" alt="Taj"></div>
+          <div class="brand-item"><img src="assets/Tata AIA Life Insurance Logo.png" alt="Tata"></div>
+          <div class="brand-item"><img src="assets/Toshiba Logo.png" alt="Toshiba"></div>
+          <div class="brand-item"><img src="assets/Bharti AXA Logo.png" alt="Bharti AXA"></div>
+          <div class="brand-item"><img src="assets/hdfc bank logo.png" alt="HDFC"></div>
+          <div class="brand-item"><img src="assets/ICICI Bank Logo.png" alt="ICICI"></div>
+          <div class="brand-item"><img src="assets/jw marriott logo.png" alt="JW Marriott"></div>
+          <div class="brand-item"><img src="assets/Spicejet.png" alt="Spicejet"></div>
+        </div>
+      </div>
+    </div>
+    <div id="experience" class="section">
+      <h1>Experience</h1>
+      <div class="cards">
+        <div class="card flip-card">
+          <div class="flip-inner">
+            <div class="front">
+              <div class="logo"><img src="assets/Deloitte.svg" alt="Deloitte"></div>
+              <div class="meta">
+                <h2>VxD Artist</h2>
+                <h3>Deloitte USI</h3>
+                <div class="meta-col">
+                  <small class="current">Mar 2022 – Present</small>
+                  <job-type>Full-time</job-type>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <ul>
+                <li>Led end-to-end design and implementation of engaging microsites, focusing on user flow optimization
+                  and responsive design.</li>
+                <li>Designed intuitive training interface templates that improved completion rates by 25% through
+                  effective storytelling and engaging visuals.</li>
+                <li>Designed impactful presentation decks for stakeholders, utilizing data visualization 
+                  techniques to effectively communicate key insights and drive informed decision-making.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card flip-card">
+          <div class="flip-inner">
+            <div class="front">
+              <div class="logo"><img src="assets/fci_upscayl_3x_high-fidelity-4x.png" alt="FCI-CCM"></div>
+              <div class="meta">
+                <h2>Video Animator</h2>
+                <h3>FCI-CCM</h3>
+                <div class="meta-col">
+                  <small>May 2021 – Mar 2022</small>
+                  <job-type>Full-time</job-type>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <ul>
+                <li>Designed personalized video content for BFSI clients (TATA AIA, Bharti AXA, HDFC), focusing on clear
+                  communication and impactful storytelling.</li>
+                <li>Developed social media–optimized designs to maximize engagement and maintain brand consistency.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card flip-card">
+          <div class="flip-inner">
+            <div class="front">
+              <div class="logo"><img src="assets/indigo_consulting_upscayl_4x_high-fidelity-4x.png" alt="Indigo"></div>
+              <div class="meta">
+                <h2>Consultant Prod.</h2>
+                <h3>Indigo Consulting <br>(Publicis Groupe)</h3>
+                <div class="meta-col">
+                  <small>Dec 2018 – May 2021</small>
+                  <job-type>Full-time</job-type>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <ul>
+                <li>Delivered design solutions for Fortune 100 clients (Citi Bank, Toshiba) meeting strict brand
+                  guidelines and expectations.</li>
+                <li>Managed QA for visual uploads across social platforms, maximizing user engagement and compliance.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card flip-card">
+          <div class="flip-inner">
+            <div class="front">
+              <div class="logo"><img src="assets/moguls.png" alt="Internet Moguls"></div>
+              <div class="meta">
+                <h2>Video Editor</h2>
+                <h3>Internet Moguls</h3>
+                <div class="meta-col">
+                  <small>Mar 2018 – Jul 2018</small>
+                  <job-type>Full-time</job-type>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <ul>
+                <li>Led a team of 3 to deliver multiple visual content projects for hospitality clients (Westin, Taj,
+                  Leela).</li>
+                <li>Implemented efficient processes, reducing production time by 45%.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card flip-card">
+          <div class="flip-inner">
+            <div class="front">
+              <div class="logo"><img src="assets/career_dose.png" alt="Career Dose"></div>
+              <div class="meta">
+                <h2>Video Editor</h2>
+                <h3>Career Dose</h3>
+                <div class="meta-col">
+                  <small>May 2017 – Jul 2017</small>
+                  <job-type>Full-time</job-type>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <ul>
+                <li>Produced educational videos requiring understanding of French, showcasing adaptability and
+                  cross‑cultural communication.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card flip-card">
+          <div class="flip-inner">
+            <div class="front">
+              <div class="logo"><img src="assets/LogoEmi.png" alt="EminenceEdu"></div>
+              <div class="meta">
+                <h2>Social Media Manager</h2>
+                <h3>EminenceEdu Pvt. Ltd.</h3>
+                <div class="meta-col">
+                  <small>Sep 2018 – Aug 2023</small>
+                  <job-type class="Freelance">Freelance</job-type>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <ul>
+                <li>Produced and managed weekly creative videos and thumbnails for social channels, adapting to changing
+                  trends.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card flip-card">
+          <div class="flip-inner">
+            <div class="front">
+              <div class="logo"><img src="assets/Cactus.png" alt="EminenceEdu"></div>
+              <div class="meta">
+                <h2>Motion Graphics <br>Animator</h2>
+                <h3>Cactus Communications</h3>
+                <div class="meta-col">
+                  <small>Jan 2021 – May 2021</small>
+                  <job-type class="Freelance">Freelance</job-type>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <ul>
+                <li>Animated explainer videos that effectively communicated complex scientific concepts to a
+                  broad audience.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card flip-card">
+          <div class="flip-inner">
+            <div class="front">
+              <div class="logo"><img src="assets/LogoEmi.png" alt="EminenceEdu"></div>
+              <div class="meta">
+                <h2>Video Editor</h2>
+                <h3>Accolite</h3>
+                <div class="meta-col">
+                  <small>Jan 2017 – Apr 2017</small>
+                  <job-type class="Freelance">Freelance</job-type>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <ul>
+                <li>Shot and edited corporate video covering over 40 employees from 3 different locations, demonstrating ability to manage multiple stakeholders and deliver high-quality content under
+                  tight deadlines.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card span-2">
+          <h2 style="margin:0">Key Achievements & Highlights</h2>
+          <ul>
+            <li>Consistently received positive client and stakeholder feedback for exceptional visual solutions.</li>
+            <li>Implemented efficient project management processes, reducing production time by 45%.</li>
+            <li>Translated client needs into compelling designs that drive engagement and achieve business goals.</li>
+            <li>Proficient in Agile methodologies, enabling flexible and responsive project delivery.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="skills" class="section">
+      <h1>Skills</h1>
+      <div class="card">
+        <h2>UI/UX</h2>
+        <div class="other-skills">
+          <div class="skill-tag">User Research</div>
+          <div class="skill-tag">Information Architecture</div>
+          <div class="skill-tag">Wireframing</div>
+          <div class="skill-tag">Prototyping</div>
+          <div class="skill-tag">Usability Testing</div>
+          <div class="skill-tag">Interaction Design</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Design Tools</h2>
+        <div class="tools-grid">
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name">Adobe XD</span>
+              <span class="skill-percent">90%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 90%;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name">Illustrator</span>
+              <span class="skill-percent">85%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 85%;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name">Photoshop</span>
+              <span class="skill-percent">80%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 80%;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name">Zoomforth</span>
+              <span class="skill-percent">75%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 75%;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name">Adobe Firefly</span>
+              <span class="skill-percent">70%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 70%;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name">After Effects</span>
+              <span class="skill-percent">65%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 65%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Other Skills</h2>
+        <div class="other-skills">
+          <div class="skill-tag">Agile Methodologies</div>
+          <div class="skill-tag">Budgeting</div>
+          <div class="skill-tag">Timeline Management</div>
+          <div class="skill-tag">Client Communication</div>
+          <div class="skill-tag">Motion Graphics</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Languages</h2>
+        <div class="language-item">
+          <span>English</span>
+          <div class="progress-bar">
+            <div class="progress" style="width: 95%;"></div>
+          </div>
+          <span class="skill-level">Fluent</span>
+        </div>
+        <div class="language-item">
+          <span>Hindi</span>
+          <div class="progress-bar">
+            <div class="progress" style="width: 100%;"></div>
+          </div>
+          <span class="skill-level">Native</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Hobbies</h2>
+        <div class="hobbies-grid">
+          <div class="hobby-item">
+            <i class="fas fa-gamepad"></i>
+            <span>Gaming</span>
+          </div>
+          <div class="hobby-item">
+            <i class="fas fa-music"></i>
+            <span>Music</span>
+          </div>
+          <div class="hobby-item">
+            <i class="fas fa-book"></i>
+            <span>Audiobooks</span>
+          </div>
+          <div class="hobby-item">
+            <i class="fas fa-motorcycle"></i>
+            <span>Bike Rides</span>
+          </div>
+          <div class="hobby-item">
+            <i class="fas fa-utensils"></i>
+            <span>Cooking</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div id="education" class="section">
+    <h1>Education</h1>
+    <div class="card">
+      <h2>Bachelor's Degree</h2>
+      <div class="degree">
+        <p><span class="category">BCA, Computer Applications</span></p>
+        <p>GGSIPU | VIPS, Delhi</p>
+        <div><small class="current">2013 - 2016</small></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Secondary School</h2>
+      <div class="degree">
+        <p><span class="category">XII Science (CBSE)</span></p>
+        <p>SRDAV Public School</p>
+        <div><small class="current">2012 - 2013</small></div>
+        <p><span class="category">X (CBSE)</span></p>
+        <p>SRDAV Public School</p>
+        <div><small class="current">2010 - 2011</small></div>
+      </div>
+    </div>
+  </div>
+  <div id="contact" class="section">
+    <h1>Contact</h1>
+    <div class="card">
+      <div class="contact-grid">
+        <div class="contact-item">
+          <i class="fas fa-location"></i>
+          <span>Delhi, India</span>
+        </div>
+        <a href="mailto:nishantgupta107@gmail.com" title="Email">
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>nishantgupta107@gmail.com</span>
+        </div>
+        </a>
+        <a href="tel:+918447885282" title="Phone">
+        <div class="contact-item">
+          <i class="fas fa-phone"></i>
+          <span>+91-8447885282</span>
+        </div>
+        </a>
+        <a href="https://www.linkedin.com/in/nishantgupta107" target="_blank" rel="noopener" title="LinkedIn">
+        <div class="contact-item">
+          <i class="fab fa-linkedin"></i>
+          <span>https://www.linkedin.com/in/nishantgupta107</span>
+        </div>
+        </a>
+        <a href="https://www.behance.net/nishantgupta107/projects" target="_blank" rel="noopener" title="Behance">
+        <div class="contact-item">
+          <i class="fab fa-behance"></i>
+          <span>https://www.behance.net/nishantgupta107/projects</span>
+        </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    const links = document.querySelectorAll('.sidebar a');
+    const sections = document.querySelectorAll('.section');
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = link.getAttribute('data-section');
+        sections.forEach(s => s.classList.remove('active'));
+        document.getElementById(target).classList.add('active');
+      });
+    });
+    // Flip-card interactions
+    const flipCards = document.querySelectorAll('#experience .flip-card');
+    flipCards.forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.toggle('flipped');
+      });
+    });
+  </script>
+</body>
+</html>
