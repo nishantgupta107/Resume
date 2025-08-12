@@ -14,12 +14,17 @@
       font-family: 'Poppins', sans-serif;
     }
 
+    /* Prevent image overflow and keep aspect ratio */
+    img { max-width: 100%; height: auto; }
+
     body {
       display: flex;
       align-items: center;
       flex-direction: row;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      height: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
       background: linear-gradient(135deg, #78ffd6, #007991);
     }
 
@@ -29,6 +34,7 @@
       left: 0;
       width: 100%;
       height: 100%;
+      object-fit: cover;
       mix-blend-mode: color-burn;
       z-index: 1;
     }
@@ -148,7 +154,6 @@
       border-radius: 8px;
       text-decoration: none;
       display: inline-block;
-      margin-top: 15px;
       transition: background 0.3s;
     }
 
@@ -159,7 +164,7 @@
     /* Right Sliding Content */
     .content {
       width: 55%;
-      height: 80%;
+      height: 80vh;
       position: relative;
       overflow-y: scroll;
       overflow-x: hidden;
@@ -185,13 +190,104 @@
       right: 0;
     }
 
+    /* Responsive tweaks */
+    @media (max-width: 1200px) {
+      .profile-card { width: 45%; }
+      .content { width: 50%; }
+    }
+
+    @media (max-width: 992px) {
+      body { flex-direction: column; align-items: stretch; }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0 0 1rem 1rem;
+      }
+      .sidebar a { width: 36px; height: 36px; font-size: 1.25rem; }
+      .profile-card, .content {
+        width: 92%;
+        margin: 1rem auto 0;
+      }
+      .profile-card { gap: 2rem; }
+      .profile-card img { width: 35%; margin-top: 2rem; }
+      .content { height: auto; border-radius: 1rem; }
+      .section { padding: 1.5rem; }
+      /* Experience tweaks for tablet */
+      #experience .front { align-items: center; gap: 0.75rem; }
+      #experience .front .logo { width: 7.5em; height: 7.5em; }
+      #experience .front .logo img { width: 80%; }
+      /* Education & Contact grids */
+      #education .degree { grid-template-columns: repeat(2, 1fr); }
+      #contact .contact-grid { grid-template-columns: 1fr; }
+      #contact .contact-item { gap: 0.5rem; flex-wrap: wrap; }
+      #contact .contact-item span { word-break: break-word; flex: 1 1 auto; min-width: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar a span { display: none; }
+      .profile-card h2 { font-size: 2rem; }
+      .profile-card p { font-size: 1.1rem; }
+      #experience .cards { grid-template-columns: 1fr; }
+      #experience .card.span-2 { grid-column: auto; }
+      /* Use simpler reveal on small screens */
+      .section { position: relative; right: 0; height: auto; padding: 1.25rem; }
+      .section { display: none; }
+      .section.active { display: block; }
+      /* Disable flip slide mechanics on small screens */
+      #experience .flip-inner { min-height: auto; }
+      #experience .front,
+      #experience .back { position: static; transform: none !important; overflow: visible; }
+      #experience .front { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
+      #experience .front .meta { flex: 1 1 200px; min-width: 0; }
+      #experience .back { border-left: none; padding-left: 0; display: none; }
+      #experience .flip-card.flipped .back { display: block; }
+      #experience .front .logo { width: 6.5em; height: 6.5em; }
+      #education .degree { grid-template-columns: 1fr; gap: 1rem; }
+      #contact .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .profile-card img { width: 60%; }
+      .download-btn { padding: 8px 12px; }
+      .social-icons a { font-size: 1.8rem; }
+      .sidebar { gap: 0.5rem; }
+      .section { padding: 1rem; }
+      #experience .front .logo { width: 5.5em; height: 5.5em; }
+      #contact .contact-item { padding: 0.75rem; }
+    }
+
+    /* Container-driven responsiveness for Experience section */
+    @container exp (max-width: 890px) {
+      /* Force single-column layout by spanning full grid width */
+      #experience .card { grid-column: 1 / -1; gap: 1.5rem 0; }
+      #experience .card.span-2 { grid-column: 1 / -1; }
+
+      /* Simplify flip behavior in narrow containers */
+      #experience .flip-inner { min-height: auto !important; }
+      #experience .front,
+      #experience .back { position: static !important; transform: none !important; overflow: visible; }
+      #experience .front { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
+      #experience .front .meta { flex: 1 1 200px; min-width: 0; }
+      #experience .back { border-left: none; padding-left: 0; }
+      /* Collapsible animation for back content */
+      #experience .back { display: block; max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+      #experience .flip-card.flipped .back { max-height: 1000px; }
+      #experience .front .logo { width: 6.5em; height: 6.5em; }
+    }
+
     /* Experience Cards */
     #experience .cards {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      /* Explicit 2 columns */
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      /* Responsive columns */
       gap: 1.5rem;
       margin-top: 2rem;
+      /* Enable container queries on the cards grid */
+      container-type: inline-size;
+      container-name: exp;
     }
 
     #experience .card.span-2 {
@@ -277,20 +373,25 @@
     }
 
     #experience .card.flip-card {
-      min-height: 220px;
+      min-height: max-content;
       overflow: hidden;
     }
 
+    /* Scale content proportionally within each card to prevent overflow/scroll */
+    #experience .flip-card { font-size: clamp(0.9rem, 0.9vw, 1rem); }
+    #experience .front h2 { font-size: clamp(1.1rem, 1.2vw, 1.4rem); }
+    #experience .front h3 { font-size: clamp(0.95rem, 1.1vw, 1.2rem); }
+
     #experience .flip-inner {
       position: relative;
-      min-height: 220px;
+      min-height: auto;
     }
 
     #experience .front,
     #experience .back {
       position: absolute;
       inset: 0;
-      overflow: auto;
+      overflow: hidden;
       transition: transform 0.45s ease;
       will-change: transform;
     }
@@ -301,7 +402,7 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 0.5rem;
+      padding: 1rem;
     }
 
     #experience .back {
@@ -342,7 +443,7 @@
     #experience .front .logo img {
       width: 80%;
       height: auto;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     #experience .front .meta {
@@ -384,19 +485,21 @@
 
     #about .card .brands-grid{
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1.25rem;
+      align-items: stretch;
     }
 
     #about .card .brands-grid .brand-item{
-      width: 13rem;
-      height: 13rem;
       border-radius: 0.5rem;
       background: #f8f9fa;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 0px 12px rgba(0, 0, 0, 0.22);
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      padding: 0.5rem;
     }
     #about .card .brands-grid .brand-item:hover{
       transform: scale(1.05);
@@ -404,9 +507,9 @@
       transition: all 0.3s ease;
     }
     #about .card .brands-grid .brand-item img{
-      width: 90%;
-      height: auto;
-      object-fit: cover;
+      max-width: 85%;
+      max-height: 85%;
+      object-fit: contain;
     }
     .category {
       font-weight: bold;
@@ -592,6 +695,68 @@
     #contact a{
       text-decoration: none;
     }
+
+    /* --- Strong mobile/tablet overrides appended late to win cascade --- */
+    @media (max-width: 992px) {
+      body { flex-direction: column; align-items: stretch; }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0 0 1rem 1rem;
+      }
+      .sidebar a { width: 36px; height: 36px; font-size: 1.25rem; }
+      .profile-card, .content { width: 92%; margin: 1rem auto 0; }
+      .profile-card { gap: 2rem; }
+      .profile-card img { width: 35%; margin-top: 2rem; }
+      .content { height: auto; border-radius: 1rem; }
+      .section { padding: 1.5rem; }
+      #experience .front { align-items: center; gap: 0.75rem; }
+      #experience .front .logo { width: 7.5em; height: 7.5em; }
+      #experience .front .logo img { width: 80%; }
+      #education .degree { grid-template-columns: repeat(2, 1fr); }
+      #contact .contact-grid { grid-template-columns: 1fr; }
+      #contact .contact-item { gap: 0.5rem; flex-wrap: wrap; }
+      #contact .contact-item span { word-break: break-word; flex: 1 1 auto; min-width: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar a span { display: none; }
+      .profile-card h2 { font-size: 2rem; }
+      .profile-card p { font-size: 1.1rem; }
+      /* Force 1-column grid on small screens */
+      #experience .cards { grid-template-columns: 1fr !important; }
+      #experience .card.span-2 { grid-column: auto; }
+      /* Use simpler reveal on small screens */
+      .section { position: relative; right: 0; height: auto; padding: 1.25rem; }
+      .section { display: none; }
+      .section.active { display: block; }
+      /* Disable absolute layout and transform; use collapsible back panel */
+      #experience .flip-inner { min-height: auto !important; }
+      #experience .front,
+      #experience .back { position: static !important; transform: none !important; overflow: visible; }
+      #experience .front { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
+      #experience .front .meta { flex: 1 1 200px; min-width: 0; }
+      #experience .back { border-left: none; padding-left: 0; }
+      /* Collapsible animation for back content */
+      #experience .back { display: block; max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+      #experience .flip-card.flipped .back { max-height: 1000px; }
+      #experience .front .logo { width: 6.5em; height: 6.5em; }
+      #education .degree { grid-template-columns: 1fr; gap: 1rem; }
+      #contact .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .profile-card img { width: 60%; }
+      .download-btn { padding: 8px 12px; }
+      .social-icons a { font-size: 1.8rem; }
+      .sidebar { gap: 0.5rem; }
+      .section { padding: 1rem; }
+      #experience .front .logo { width: 5.5em; height: 5.5em; }
+      #contact .contact-item { padding: 0.75rem; }
+    }
   </style>
 </head>
 
@@ -600,7 +765,7 @@
   <div class="sidebar">
     <a href="#" data-section="about"><i class="fas fa-user"></i><span>About</span></a>
     <a href="#" data-section="experience"><i class="fas fa-briefcase"></i><span>Experience</span></a>
-    <a href="#" data-section="skills"><i class="fas fa-cogs"></i><span>Skills</span></a>
+    <a href="#" data-section="skills"><i class="fas fa-compass-drafting"></i><span>Skills</span></a>
     <a href="#" data-section="education"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
     <a href="#" data-section="contact"><i class="fas fa-envelope"></i><span>Contact</span></a>
   </div>
