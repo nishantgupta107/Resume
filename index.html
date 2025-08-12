@@ -223,7 +223,7 @@
       #education .degree { grid-template-columns: repeat(2, 1fr); }
       #contact .contact-grid { grid-template-columns: 1fr; }
       #contact .contact-item { gap: 0.5rem; flex-wrap: wrap; }
-      #contact .contact-item span { word-break: break-word; flex: 1 1 auto; min-width: 0; }
+      #contact .contact-item span { word-break: break-word; flex: 1; min-width: 0; }
     }
     
     @media (max-width: 768px) {
@@ -316,6 +316,7 @@
       #experience .flip-card.flipped .front { transform: translateX(-100%); }
       #experience .flip-card.flipped .back { transform: translateX(0%); }
       #experience .card.span-2 { grid-column: span 1; }
+      #experience .front .logo { width: 9em !important; height: 9em !important; }
     }
 
     /* ≤1335px: 1 column with simplified mobile behavior */
@@ -325,7 +326,7 @@
       #experience .flip-inner { min-height: auto; }
       #experience .front,
       #experience .back { position: static; transform: none !important; overflow: visible; }
-      #experience .front { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
+      #experience .front { display: flex; align-items: center; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
       #experience .front .meta { flex: 1 1 200px; min-width: 0; }
       #experience .back { border-left: none; padding-left: 0; display: none; }
       #experience .flip-card.flipped .back { display: block; }
@@ -528,11 +529,6 @@
       aspect-ratio: 1 / 1;
       padding: 0.5rem;
     }
-    #about .card .brands-grid .brand-item:hover{
-      transform: scale(1.05);
-      box-shadow: 0 0px 12px rgba(37, 86, 46, 0.22);
-      transition: all 0.3s ease;
-    }
     #about .card .brands-grid .brand-item img{
       max-width: 85%;
       max-height: 85%;
@@ -544,6 +540,7 @@
       color: #44af8f;
       padding: 0.4rem;
       border-radius: 0.5rem;
+      white-space: nowrap;
     }
 
     /* Skills Section */
@@ -698,6 +695,8 @@
     }
     #contact .contact-item{
       display: flex;
+      gap: 0.2rem;
+      height: 4rem;
       flex-direction: row;
       align-items: center;
       padding: 1rem 0.5rem;
@@ -717,7 +716,7 @@
     #contact .contact-item span {
       font-size: 0.9em;
       color: #555;
-      text-align: center;
+      text-align: left;
     }
     #contact a{
       text-decoration: none;
@@ -746,7 +745,7 @@
       #education .degree { grid-template-columns: repeat(2, 1fr); }
       #contact .contact-grid { grid-template-columns: 1fr; }
       #contact .contact-item { gap: 0.5rem; flex-wrap: wrap; }
-      #contact .contact-item span { word-break: break-word; flex: 1 1 auto; min-width: 0; }
+      #contact .contact-item span { word-break: break-word; flex: 1; min-width: 0; }
     }
 
     @media (max-width: 768px) {
@@ -810,7 +809,7 @@
       <a href="https://www.behance.net/nishantgupta107/projects" target="_blank" rel="noopener" title="Behance"><i
           class="fab fa-behance"></i></a>
     </div>
-    <a href="https://www.linkedin.com/in/nishantgupta107" target="_blank" rel="noopener" class="download-btn"><i
+    <a href="assets/Resume-Nishant Gupta.pdf" target="_blank" rel="noopener" class="download-btn"><i
         class="fas fa-download"></i>&nbsp;&nbsp;Download CV</a>
   </div>
 
