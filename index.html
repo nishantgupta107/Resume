@@ -225,7 +225,7 @@
       #contact .contact-item { gap: 0.5rem; flex-wrap: wrap; }
       #contact .contact-item span { word-break: break-word; flex: 1 1 auto; min-width: 0; }
     }
-
+    
     @media (max-width: 768px) {
       .sidebar a span { display: none; }
       .profile-card h2 { font-size: 2rem; }
@@ -259,36 +259,20 @@
       #contact .contact-item { padding: 0.75rem; }
     }
 
-    /* Container-driven responsiveness for Experience section */
-    @container exp (max-width: 890px) {
-      /* Force single-column layout by spanning full grid width */
-      #experience .card { grid-column: 1 / -1; gap: 1.5rem 0; }
-      #experience .card.span-2 { grid-column: 1 / -1; }
-
-      /* Simplify flip behavior in narrow containers */
-      #experience .flip-inner { min-height: auto !important; }
-      #experience .front,
-      #experience .back { position: static !important; transform: none !important; overflow: visible; }
-      #experience .front { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
-      #experience .front .meta { flex: 1 1 200px; min-width: 0; }
-      #experience .back { border-left: none; padding-left: 0; }
-      /* Collapsible animation for back content */
-      #experience .back { display: block; max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
-      #experience .flip-card.flipped .back { max-height: 1000px; }
-      #experience .front .logo { width: 6.5em; height: 6.5em; }
-    }
+    /* Container-driven responsiveness for Experience section (removed) */
 
     /* Experience Cards */
     #experience .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      /* Default to single column; media queries below adjust as needed */
+      grid-template-columns: 1fr;
       /* Responsive columns */
       gap: 1.5rem;
       margin-top: 2rem;
-      /* Enable container queries on the cards grid */
-      container-type: inline-size;
-      container-name: exp;
+      /* container queries removed */
     }
+
+    /* Restore slide animation and absolute layout for wider containers (moved to viewport media queries below) */
 
     #experience .card.span-2 {
       grid-column: span 2;
@@ -302,6 +286,49 @@
       border: 1px solid rgba(0, 0, 0, 0.06);
       position: relative;
       overflow: hidden;
+    }
+
+    /* ===== Experience viewport-based responsiveness (no container queries) ===== */
+    /* ≥1920px: 2 columns with slide/flip animation */
+    @media (min-width: 1920px) {
+      #experience .cards { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      /* Ensure slide mechanics are active */
+      #experience .flip-inner { position: relative; }
+      #experience .front,
+      #experience .back { position: absolute; inset: 0; overflow: hidden; transition: transform 0.45s ease; will-change: transform; }
+      #experience .front { transform: translateX(0%); display: flex; align-items: center; gap: 1rem; padding: 1rem; }
+      #experience .back { transform: translateX(110%); border-left: 0.5rem solid #007991; padding-left: 1rem; }
+      #experience .flip-card:not(.flipped):hover .back { transform: translateX(95%); }
+      #experience .flip-card.flipped .front { transform: translateX(-100%); }
+      #experience .flip-card.flipped .back { transform: translateX(0%); }
+    }
+
+    /* 1336px–1700px: 1 column with slide/flip animation */
+    @media (min-width: 1336px) and (max-width: 1700px) {
+      #experience .cards { grid-template-columns: 1fr; gap: 1.5rem; }
+      /* Keep slide mechanics */
+      #experience .flip-inner { position: relative; }
+      #experience .front,
+      #experience .back { position: absolute; inset: 0; overflow: hidden; transition: transform 0.45s ease; will-change: transform; }
+      #experience .front { transform: translateX(0%); display: flex; align-items: center; gap: 2rem !important; padding: 1rem; }
+      #experience .back { transform: translateX(110%); border-left: 0.5rem solid #007991; padding-left: 1rem; }
+      #experience .flip-card:not(.flipped):hover .back { transform: translateX(95%); }
+      #experience .flip-card.flipped .front { transform: translateX(-100%); }
+      #experience .flip-card.flipped .back { transform: translateX(0%); }
+      #experience .card.span-2 { grid-column: span 1; }
+    }
+
+    /* ≤1335px: 1 column with simplified mobile behavior */
+    @media (max-width: 1335px) {
+      #experience .cards { grid-template-columns: 1fr; gap: 1.5rem 0; }
+      /* Simplify layout */
+      #experience .flip-inner { min-height: auto; }
+      #experience .front,
+      #experience .back { position: static; transform: none !important; overflow: visible; }
+      #experience .front { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
+      #experience .front .meta { flex: 1 1 200px; min-width: 0; }
+      #experience .back { border-left: none; padding-left: 0; display: none; }
+      #experience .flip-card.flipped .back { display: block; }
     }
 
     #experience .card::before {
@@ -384,7 +411,7 @@
 
     #experience .flip-inner {
       position: relative;
-      min-height: auto;
+      min-height: 20vh;
     }
 
     #experience .front,
