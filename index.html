@@ -166,7 +166,7 @@
       width: 55%;
       height: 80vh;
       position: relative;
-      overflow-y: scroll;
+      overflow-y: auto;
       overflow-x: hidden;
       display: flex;
       border-radius: 1em 0 0 1em;
@@ -325,11 +325,13 @@
       /* Simplify layout */
       #experience .flip-inner { min-height: auto; }
       #experience .front,
-      #experience .back { position: static; transform: none !important; overflow: visible; }
+      #experience .back { position: static !important; transform: none !important; overflow: visible; }
       #experience .front { display: flex; align-items: center; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
       #experience .front .meta { flex: 1 1 200px; min-width: 0; }
       #experience .back { border-left: none; padding-left: 0; display: none; }
       #experience .flip-card.flipped .back { display: block; }
+      #experience .card.span-2 { grid-column: span 1; }
+      #contact .contact-grid {grid-template-columns: 1fr;}
     }
 
     #experience .card::before {
@@ -419,7 +421,7 @@
     #experience .back {
       position: absolute;
       inset: 0;
-      overflow: hidden;
+      overflow: auto;
       transition: transform 0.45s ease;
       will-change: transform;
     }
@@ -690,7 +692,7 @@
     }
     #contact .contact-grid{
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(45vh, 1fr));
       gap: 1rem;
     }
     #contact .contact-item{
@@ -721,7 +723,13 @@
     #contact a{
       text-decoration: none;
     }
-
+    .no-scroll{
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .no-scroll::-webkit-scrollbar {
+      display: none;
+    }
     /* --- Strong mobile/tablet overrides appended late to win cascade --- */
     @media (max-width: 992px) {
       body { flex-direction: column; align-items: stretch; }
@@ -762,12 +770,12 @@
       /* Disable absolute layout and transform; use collapsible back panel */
       #experience .flip-inner { min-height: auto !important; }
       #experience .front,
-      #experience .back { position: static !important; transform: none !important; overflow: visible; }
+      #experience .back { position: static !important; transform: none !important; overflow: auto; }
       #experience .front { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0; flex-wrap: wrap; }
       #experience .front .meta { flex: 1 1 200px; min-width: 0; }
       #experience .back { border-left: none; padding-left: 0; }
       /* Collapsible animation for back content */
-      #experience .back { display: block; max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+      #experience .back { display: block; max-height: 0; overflow: auto; transition: max-height 0.35s ease; }
       #experience .flip-card.flipped .back { max-height: 1000px; }
       #experience .front .logo { width: 6.5em; height: 6.5em; }
       #education .degree { grid-template-columns: 1fr; gap: 1rem; }
@@ -861,7 +869,7 @@
       <div class="cards">
         <div class="card flip-card">
           <div class="flip-inner">
-            <div class="front">
+            <div class="front no-scroll">
               <div class="logo"><img src="assets/Deloitte.svg" alt="Deloitte"></div>
               <div class="meta">
                 <h2>VxD Artist</h2>
@@ -872,7 +880,7 @@
                 </div>
               </div>
             </div>
-            <div class="back">
+            <div class="back no-scroll">
               <ul>
                 <li>Led end-to-end design and implementation of engaging microsites, focusing on user flow optimization
                   and responsive design.</li>
@@ -886,7 +894,7 @@
         </div>
         <div class="card flip-card">
           <div class="flip-inner">
-            <div class="front">
+            <div class="front no-scroll">
               <div class="logo"><img src="assets/fci_upscayl_3x_high-fidelity-4x.png" alt="FCI-CCM"></div>
               <div class="meta">
                 <h2>Video Animator</h2>
@@ -897,7 +905,7 @@
                 </div>
               </div>
             </div>
-            <div class="back">
+            <div class="back no-scroll">
               <ul>
                 <li>Designed personalized video content for BFSI clients (TATA AIA, Bharti AXA, HDFC), focusing on clear
                   communication and impactful storytelling.</li>
@@ -908,7 +916,7 @@
         </div>
         <div class="card flip-card">
           <div class="flip-inner">
-            <div class="front">
+            <div class="front no-scroll">
               <div class="logo"><img src="assets/indigo_consulting_upscayl_4x_high-fidelity-4x.png" alt="Indigo"></div>
               <div class="meta">
                 <h2>Consultant Prod.</h2>
@@ -919,7 +927,7 @@
                 </div>
               </div>
             </div>
-            <div class="back">
+            <div class="back no-scroll">
               <ul>
                 <li>Delivered design solutions for Fortune 100 clients (Citi Bank, Toshiba) meeting strict brand
                   guidelines and expectations.</li>
@@ -931,7 +939,7 @@
         </div>
         <div class="card flip-card">
           <div class="flip-inner">
-            <div class="front">
+            <div class="front no-scroll">
               <div class="logo"><img src="assets/moguls.png" alt="Internet Moguls"></div>
               <div class="meta">
                 <h2>Video Editor</h2>
@@ -942,7 +950,7 @@
                 </div>
               </div>
             </div>
-            <div class="back">
+            <div class="back no-scroll">
               <ul>
                 <li>Led a team of 3 to deliver multiple visual content projects for hospitality clients (Westin, Taj,
                   Leela).</li>
@@ -953,7 +961,7 @@
         </div>
         <div class="card flip-card">
           <div class="flip-inner">
-            <div class="front">
+            <div class="front no-scroll">
               <div class="logo"><img src="assets/career_dose.png" alt="Career Dose"></div>
               <div class="meta">
                 <h2>Video Editor</h2>
@@ -964,7 +972,7 @@
                 </div>
               </div>
             </div>
-            <div class="back">
+            <div class="back no-scroll">
               <ul>
                 <li>Produced educational videos requiring understanding of French, showcasing adaptability and
                   cross‑cultural communication.</li>
@@ -974,7 +982,7 @@
         </div>
         <div class="card flip-card">
           <div class="flip-inner">
-            <div class="front">
+            <div class="front no-scroll">
               <div class="logo"><img src="assets/LogoEmi.png" alt="EminenceEdu"></div>
               <div class="meta">
                 <h2>Social Media Manager</h2>
@@ -985,7 +993,7 @@
                 </div>
               </div>
             </div>
-            <div class="back">
+            <div class="back no-scroll">
               <ul>
                 <li>Produced and managed weekly creative videos and thumbnails for social channels, adapting to changing
                   trends.</li>
@@ -995,7 +1003,7 @@
         </div>
         <div class="card flip-card">
           <div class="flip-inner">
-            <div class="front">
+            <div class="front no-scroll">
               <div class="logo"><img src="assets/Cactus.png" alt="EminenceEdu"></div>
               <div class="meta">
                 <h2>Motion Graphics <br>Animator</h2>
@@ -1006,7 +1014,7 @@
                 </div>
               </div>
             </div>
-            <div class="back">
+            <div class="back no-scroll">
               <ul>
                 <li>Animated explainer videos that effectively communicated complex scientific concepts to a
                   broad audience.</li>
@@ -1016,7 +1024,7 @@
         </div>
         <div class="card flip-card">
           <div class="flip-inner">
-            <div class="front">
+            <div class="front no-scroll">
               <div class="logo"><img src="assets/accolite_black.png" alt="Accolite"></div>
               <div class="meta">
                 <h2>Video Editor</h2>
@@ -1027,7 +1035,7 @@
                 </div>
               </div>
             </div>
-            <div class="back">
+            <div class="back no-scroll">
               <ul>
                 <li>Shot and edited corporate video covering over 40 employees from 3 different locations, demonstrating ability to manage multiple stakeholders and deliver high-quality content under
                   tight deadlines.</li>
